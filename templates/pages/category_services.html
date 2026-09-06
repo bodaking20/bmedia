@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block title %}خدمات {{ category.name }} - B media{% endblock %}
+
+{% block content %}
+<div class="mb-5">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'services:home' %}" class="text-decoration-none">الرئيسية</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ category.name }}</li>
+        </ol>
+    </nav>
+    <h2 class="fw-bold mb-3">
+        {% if category.icon %}
+            <img src="{{ category.icon.url }}" alt="icon" style="width: 40px; height: 40px;" class="me-2">
+        {% else %}
+            <i class="fa-solid fa-list text-primary me-2"></i>
+        {% endif %}
+        {{ category.name }}
+    </h2>
+    <p class="text-muted">{{ category.description }}</p>
+</div>
+
+<div class="row g-4">
+    {% for service in services %}
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm border-0 bg-body-tertiary transition-hover">
+            <div class="card-body d-flex flex-column">
+                <h5 class="card-title fw-bold" style="color: var(--primary-color);">{{ service.name }}</h5>
+                
+                <div class="p-3 my-3 rounded bg-body-secondary text-center">
+                    <span class="fs-4 fw-bold text-success">{{ service.price }} جنيه</span>
+                    <span class="text-muted d-block small">لكل {{ service.base_quantity }} وحدة</span>
+                </div>
+                
+                <p class="card-text text-muted small">{{ service.description|truncatewords:20 }}</p>
+                
+                <ul class="list-unstyled mb-4 small mt-auto">
+                    <li class="mb-2"><i class="fa-solid fa-arrow-down text-danger me-2"></i> الحد الأدنى: <strong>{{ service.min_quantity }}</strong></li>
+                    <li><i class="fa-solid fa-arrow-up text-primary me-2"></i> الحد الأقصى: <strong>{{ service.max_quantity }}</strong></li>
+                </ul>
+                
+                <!-- تم ربط الزر بصفحة الطلب الخاصة بالخدمة -->
+                <a href="{% url 'orders:create_order' service.id %}" class="btn btn-primary w-100 mt-auto">
+                    <i class="fa-solid fa-cart-shopping me-2"></i> طلب الخدمة
+                </a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12 text-center">
+        <div class="alert alert-warning">
+            <i class="fa-solid fa-circle-exclamation me-2"></i> لا توجد خدمات متاحة في هذا القسم حالياً.
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<style>
+    .transition-hover { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+    .transition-hover:hover { transform: translateY(-5px); box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important; }
+</style>
+{% endblock %}

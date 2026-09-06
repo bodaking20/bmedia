@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+{% block title %}طلب {{ service.name }} - B media{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-sm border-0 bg-body-tertiary mb-4">
+            <div class="card-body p-4">
+                <h3 class="fw-bold text-primary mb-3">{{ service.name }}</h3>
+                <p class="text-muted mb-4">{{ service.description }}</p>
+                
+                <div class="row text-center mb-4 g-2">
+                    <div class="col-4">
+                        <div class="p-2 bg-body-secondary rounded">
+                            <small class="d-block text-muted">السعر</small>
+                            <strong class="text-success">{{ service.price }} ج / {{ service.base_quantity }}</strong>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="p-2 bg-body-secondary rounded">
+                            <small class="d-block text-muted">الحد الأدنى</small>
+                            <strong>{{ service.min_quantity }}</strong>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="p-2 bg-body-secondary rounded">
+                            <small class="d-block text-muted">الحد الأقصى</small>
+                            <strong>{{ service.max_quantity }}</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="alert alert-info d-flex justify-content-between align-items-center">
+                    <span><i class="fa-solid fa-wallet me-2"></i> رصيدك المتاح:</span>
+                    <strong class="fs-5">{{ wallet.available_balance }} جنيه</strong>
+                </div>
+
+                <hr>
+
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="link" class="form-label fw-bold">الرابط (Link)</label>
+                        <input type="url" class="form-control" id="link" name="link" required placeholder="https://...">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="quantity" class="form-label fw-bold">العدد المطلوب</label>
+                        <input type="number" class="form-control form-control-lg" id="quantity" name="quantity" 
+                               min="{{ service.min_quantity }}" max="{{ service.max_quantity }}" required value="{{ service.min_quantity }}">
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="notes" class="form-label fw-bold">ملاحظات إضافية (اختياري)</label>
+                        <textarea class="form-control" id="notes" name="notes" rows="2"></textarea>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center bg-body-secondary p-3 rounded mb-4">
+                        <span class="fs-5 fw-bold">إجمالي التكلفة:</span>
+                        <span class="fs-3 fw-bold text-success" id="total-price-display">0.00 جنيه</span>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-lg w-100" id="submit-btn">تأكيد الطلب والدفع</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // متغيرات JavaScript مجلوبة من قاعدة البيانات
+    const pricePerBase = parseFloat("{{ service.price }}");
+    const baseQuantity = parseInt("{{ service.base_quantity }}");
+    const minQuantity = parseInt("{{ service.min_quantity }}");
+    const maxQuantity = parseInt("{{ service.max_quantity }}");
+    const availableBalance = parseFloat("{{ wallet.available_balance }}");
+
+    const quantityInput = document.getElementById('quantity');
+    const totalPriceDisplay = document.getElementById('total-price-display');
+    const submitBtn = document.getElementById('submit-btn');
+
+    function calculatePrice() {
+        let qty = parseInt(quantityInput.value) || 0;
+        
+        // حساب التكلفة
+        let total = (qty / baseQuantity) * pricePerBase;
+        totalPriceDisplay.innerText = total.toFixed(2) + ' جنيه';
+
+        // التحقق من الرصيد والحدود لتفعيل أو تعطيل الزر
+        if (qty < minQuantity || qty > maxQuantity || total > availableBalance) {
+            submitBtn.disabled = true;
+            if(total > availableBalance) {
+                totalPriceDisplay.classList.replace('text-success', 'text-danger');
+            }
+        } else {
+            submitBtn.disabled = false;
+            totalPriceDisplay.classList.replace('text-danger', 'text-success');
+        }
+    }
+
+    // تشغيل الحساب فوراً عند تحميل الصفحة وعند كل تغيير في الرقم
+    window.addEventListener('DOMContentLoaded', calculatePrice);
+    quantityInput.addEventListener('input', calculatePrice);
+</script>
+{% endblock %}

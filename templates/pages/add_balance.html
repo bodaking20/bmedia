@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block title %}شحن الرصيد - B media{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center align-items-center" style="min-height: 70vh;">
+    <div class="col-md-6">
+        <div class="card shadow-sm border-0 bg-body-tertiary">
+            <div class="card-body p-5">
+                <h3 class="fw-bold text-center mb-4"><i class="fa-solid fa-money-bill-transfer text-success me-2"></i> شحن الرصيد</h3>
+                
+                <div class="alert alert-info small mb-4">
+                    <i class="fa-solid fa-circle-info me-1"></i> يرجى تحويل المبلغ أولاً إلى أحد الأرقام أو الحسابات الخاصة بنا، ثم ملء هذا النموذج لتأكيد الدفع.
+                    <hr>
+                    <strong>طرق الدفع المتاحة:</strong>
+                    <ul class="mb-0">
+                        <li>فودافون كاش: 010XXXXXXXX</li>
+                        <li>إنستاباي (InstaPay): bmedia@instapay</li>
+                    </ul>
+                </div>
+
+                <form method="POST">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label for="amount" class="form-label fw-bold">المبلغ المحول (جنيه)</label>
+                        <input type="number" class="form-control form-control-lg" id="amount" name="amount" min="1" required placeholder="مثال: 500">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="payment_method" class="form-label fw-bold">طريقة الدفع</label>
+                        <select class="form-select" id="payment_method" name="payment_method" required>
+                            <option value="" selected disabled>اختر طريقة الدفع...</option>
+                            <option value="فودافون كاش">فودافون كاش (Vodafone Cash)</option>
+                            <option value="إنستاباي">إنستاباي (InstaPay)</option>
+                            <option value="تحويل بنكي">تحويل بنكي (Bank Transfer)</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="transfer_number" class="form-label fw-bold">رقم الهاتف أو الحساب الذي حولت منه</label>
+                        <input type="text" class="form-control" id="transfer_number" name="transfer_number" required placeholder="رقم الموبايل أو يوزر إنستاباي">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-lg w-100">تأكيد طلب الشحن</button>
+                    <a href="{% url 'accounts:dashboard' %}" class="btn btn-outline-secondary w-100 mt-2">إلغاء والعودة للوحة التحكم</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

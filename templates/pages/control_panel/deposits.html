@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% block title %}إدارة شحنات الرصيد - B media{% endblock %}
+
+{% block content %}
+<div class="mb-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'control_panel:dashboard' %}" class="text-decoration-none">لوحة الإدارة</a></li>
+            <li class="breadcrumb-item active" aria-current="page">طلبات الشحن المعلقة</li>
+        </ol>
+    </nav>
+    <h2 class="fw-bold"><i class="fa-solid fa-money-bill-transfer text-info me-2"></i> طلبات الشحن المعلقة</h2>
+</div>
+
+<div class="card shadow-sm border-0 bg-body-tertiary">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>رقم الطلب</th>
+                        <th>العميل</th>
+                        <th>المبلغ المطلوب</th>
+                        <th>بيانات التحويل</th>
+                        <th>التاريخ</th>
+                        <th>الإجراء</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for deposit in deposits %}
+                    <tr>
+                        <td><strong>#{{ deposit.id }}</strong></td>
+                        <td>
+                            <span class="fw-bold">{{ deposit.user.username }}</span>
+                            <br><small class="text-muted">{{ deposit.user.email }}</small>
+                        </td>
+                        <td><strong class="text-success fs-5">{{ deposit.amount }} ج</strong></td>
+                        <td>{{ deposit.description }}</td>
+                        <td class="text-muted small">{{ deposit.created_at|date:"Y-m-d H:i" }}</td>
+                        <td>
+                            <div class="d-flex gap-2">
+                                <a href="{% url 'control_panel:handle_deposit' deposit.id 'approve' %}" class="btn btn-sm btn-success fw-bold">
+                                    <i class="fa-solid fa-check me-1"></i> موافقة
+                                </a>
+                                <a href="{% url 'control_panel:handle_deposit' deposit.id 'reject' %}" class="btn btn-sm btn-danger fw-bold">
+                                    <i class="fa-solid fa-xmark me-1"></i> رفض
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center py-5 text-muted">
+                            <i class="fa-solid fa-check-double fa-3x mb-3 text-success"></i>
+                            <h5>لا توجد طلبات شحن معلقة حالياً!</h5>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

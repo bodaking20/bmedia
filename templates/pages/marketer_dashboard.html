@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+{% block title %}لوحة المسوق - B media{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h2 class="fw-bold"><i class="fa-solid fa-bullhorn text-primary me-2"></i> لوحة تحكم المسوقين</h2>
+        <p class="text-muted">نظام الإحالة والتسويق بالعمولة الخاص بمنصة B media.</p>
+    </div>
+</div>
+
+{% if is_marketer %}
+    {% if not profile.is_active %}
+        <div class="alert alert-danger">
+            <i class="fa-solid fa-triangle-exclamation me-2"></i> حساب المسوق الخاص بك غير نشط حالياً. يرجى التواصل مع الإدارة.
+        </div>
+    {% else %}
+        <!-- كروت إحصائيات المسوق -->
+        <div class="row g-4 mb-4">
+            <div class="col-md-6">
+                <div class="card shadow-sm border-0 bg-primary text-white h-100">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="fa-solid fa-percent me-2"></i> نسبة عمولتك</h5>
+                        <h2 class="mt-3 fw-bold">{{ profile.commission_rate }} %</h2>
+                        <p class="mb-0 small">من إجمالي كل طلب ناجح يقوم به عملاؤك.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="card shadow-sm border-0 bg-dark text-white h-100">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="fa-solid fa-users me-2"></i> عدد الإحالات</h5>
+                        <h2 class="mt-3 fw-bold">{{ referrals.count }} عميل</h2>
+                        <p class="mb-0 small">سجلوا عن طريق الكود الخاص بك.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- رابط وكود الإحالة -->
+        <div class="card shadow-sm border-0 bg-body-tertiary mb-5">
+            <div class="card-body p-4">
+                <h5 class="fw-bold mb-3">رابط الإحالة الخاص بك (Referral Link)</h5>
+                <p class="text-muted small">شارك هذا الرابط مع عملائك. أي شخص يسجل من خلاله سيتم ربطه بك تلقائياً.</p>
+                
+                <div class="input-group mb-3" dir="ltr">
+                    <button class="btn btn-primary" type="button" onclick="copyLink()" id="copyBtn">نسخ الرابط</button>
+                    <input type="text" class="form-control text-start" id="referralLink" value="{{ referral_link }}" readonly>
+                </div>
+
+                <div class="mt-4">
+                    <span class="fw-bold">كود الإحالة الخاص بك:</span> 
+                    <span class="badge bg-success fs-6 ms-2">{{ profile.referral_code }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- سجل العملاء -->
+        <div class="card shadow-sm border-0 bg-body-tertiary">
+            <div class="card-body">
+                <h5 class="card-title fw-bold mb-4">العملاء المسجلين عن طريقك</h5>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead>
+                            <tr>
+                                <th>اسم العميل</th>
+                                <th>تاريخ التسجيل</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for ref in referrals %}
+                            <tr>
+                                <td><i class="fa-solid fa-user text-secondary me-2"></i> {{ ref.referred_user.username }}</td>
+                                <td class="text-muted">{{ ref.created_at|date:"Y-m-d" }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="2" class="text-center py-4 text-muted">لم يقم أي عميل بالتسجيل عن طريقك حتى الآن.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% else %}
+    <!-- إذا لم يكن المستخدم مسوقاً -->
+    <div class="card shadow-sm border-0 bg-body-tertiary text-center py-5">
+        <div class="card-body">
+            <i class="fa-solid fa-handshake-angle fa-4x text-muted mb-3"></i>
+            <h3 class="fw-bold">لست مسوقاً بعد!</h3>
+            <p class="text-muted mb-4">انضم إلى برنامج التسويق بالعمولة الخاص بنا وابدأ في تحقيق أرباح من خلال دعوة أصدقائك وعملائك.</p>
+            <a href="#" class="btn btn-primary btn-lg">تواصل مع الإدارة لتفعيل حساب مسوق</a>
+        </div>
+    </div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function copyLink() {
+        var copyText = document.getElementById("referralLink");
+        copyText.select();
+        copyText.setSelectionRange(0, 99999); // للهواتف
+        navigator.clipboard.writeText(copyText.value);
+        
+        var btn = document.getElementById("copyBtn");
+        btn.innerHTML = "تم النسخ <i class='fa-solid fa-check'></i>";
+        btn.classList.replace("btn-primary", "btn-success");
+        
+        setTimeout(function(){
+            btn.innerHTML = "نسخ الرابط";
+            btn.classList.replace("btn-success", "btn-primary");
+        }, 3000);
+    }
+</script>
+{% endblock %}

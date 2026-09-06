@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block title %}تسجيل الدخول - B media{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center align-items-center mb-5" style="min-height: 60vh;">
+    <div class="col-md-5">
+        <div class="card shadow-sm border-0 bg-body-tertiary mt-4">
+            <div class="card-body p-5">
+                <h3 class="text-center mb-4 fw-bold">تسجيل الدخول</h3>
+                
+                <form method="POST" novalidate>
+                    {% csrf_token %}
+                    
+                    <!-- عرض أخطاء النموذج العامة (مثل: اسم المستخدم أو كلمة المرور غير صحيحة) -->
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger p-2 small text-center">
+                            {% for error in form.non_field_errors %}
+                                <div><i class="fa-solid fa-circle-exclamation me-1"></i>{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    {% for field in form %}
+                        <div class="mb-3">
+                            <label for="{{ field.id_for_label }}" class="form-label fw-bold">{{ field.label }}</label>
+                            
+                            <!-- مربع الإدخال -->
+                            {{ field }}
+                            
+                            <!-- عرض الأخطاء الخاصة بكل حقل إن وجدت -->
+                            {% if field.errors %}
+                                {% for error in field.errors %}
+                                    <div class="text-danger small mt-1"><i class="fa-solid fa-circle-exclamation me-1"></i>{{ error }}</div>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+
+                    <button type="submit" class="btn btn-primary btn-lg w-100 mt-4">دخول</button>
+                </form>
+                
+                <div class="text-center mt-4">
+                    <p class="text-muted">ليس لديك حساب؟ <a href="{% url 'accounts:register' %}" class="text-decoration-none fw-bold">إنشاء حساب</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

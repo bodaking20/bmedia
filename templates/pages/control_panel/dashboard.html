@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% block title %}الإدارة - B media{% endblock %}
+
+{% block content %}
+<div class="row mb-4 align-items-center">
+    <div class="col-md-6">
+        <h2 class="fw-bold"><i class="fa-solid fa-shield-halved text-danger me-2"></i> لوحة الإدارة</h2>
+        <p class="text-muted">مرحباً بك يا مدير المنصة. نظرة عامة على أداء الموقع.</p>
+    </div>
+</div>
+
+<!-- كروت الإحصائيات -->
+<div class="row g-4 mb-5">
+    <div class="col-md-3">
+        <!-- تم إضافة رابط إدارة الطلبات هنا -->
+        <a href="{% url 'control_panel:manage_orders' %}" class="text-decoration-none">
+            <div class="card shadow-sm border-0 bg-warning text-dark h-100 transition-hover">
+                <div class="card-body text-center">
+                    <i class="fa-solid fa-clock-rotate-left fa-2x mb-2"></i>
+                    <h5 class="card-title fw-bold">طلبات قيد الانتظار</h5>
+                    <h2 class="mt-2 fw-bold">{{ pending_orders }}</h2>
+                </div>
+            </div>
+        </a>
+    </div>
+    
+    <div class="col-md-3">
+        <!-- رابط إدارة الشحنات -->
+        <a href="{% url 'control_panel:manage_deposits' %}" class="text-decoration-none">
+            <div class="card shadow-sm border-0 bg-info text-dark h-100 transition-hover">
+                <div class="card-body text-center">
+                    <i class="fa-solid fa-money-bill-transfer fa-2x mb-2"></i>
+                    <h5 class="card-title fw-bold">شحنات معلقة</h5>
+                    <h2 class="mt-2 fw-bold">{{ pending_deposits }}</h2>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card shadow-sm border-0 bg-success text-white h-100 transition-hover">
+            <div class="card-body text-center">
+                <i class="fa-solid fa-check-double fa-2x mb-2"></i>
+                <h5 class="card-title fw-bold">طلبات مكتملة</h5>
+                <h2 class="mt-2 fw-bold">{{ completed_orders }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card shadow-sm border-0 bg-primary text-white h-100 transition-hover">
+            <div class="card-body text-center">
+                <i class="fa-solid fa-users fa-2x mb-2"></i>
+                <h5 class="card-title fw-bold">إجمالي العملاء</h5>
+                <h2 class="mt-2 fw-bold">{{ total_users }}</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- أحدث الطلبات المعلقة -->
+<div class="card shadow-sm border-0 bg-body-tertiary mb-5">
+    <div class="card-header bg-transparent border-0 pt-4 pb-0">
+        <h5 class="fw-bold"><i class="fa-solid fa-bell text-warning me-2"></i> أحدث الطلبات التي تحتاج تنفيذ</h5>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>رقم</th>
+                        <th>العميل</th>
+                        <th>الخدمة</th>
+                        <th>التكلفة</th>
+                        <th>التاريخ</th>
+                        <th>إجراء</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in recent_orders %}
+                    <tr>
+                        <td><strong>#{{ order.id }}</strong></td>
+                        <td>{{ order.user.username }}</td>
+                        <td>{{ order.service.name }}</td>
+                        <td>{{ order.total_price }} ج</td>
+                        <td class="text-muted small">{{ order.created_at|date:"Y-m-d H:i" }}</td>
+                        <td>
+                            <!-- تم تحديث هذا الزر ليوجه لصفحة إدارة الطلبات -->
+                            <a href="{% url 'control_panel:manage_orders' %}" class="btn btn-sm btn-primary">إدارة الطلب</a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center py-4 text-muted">لا توجد طلبات معلقة حالياً.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

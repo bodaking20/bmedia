@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+{% block title %}الرئيسية - B media{% endblock %}
+
+{% block content %}
+<!-- Hero Section (القسم الافتتاحي) -->
+<div class="row align-items-center mb-5 py-5 rounded-4 shadow" style="background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%); color: white;">
+    <div class="col-lg-7 p-5 text-center text-lg-end">
+        <h1 class="display-4 fw-bold mb-3"><i class="fa-solid fa-bolt text-warning"></i> منصة B media</h1>
+        <p class="lead mb-4">وجهتك الأولى لتكبير حساباتك على السوشيال ميديا وإدارة حملاتك بنجاح. نوفر لك خدمات فائقة الجودة بأسعار لا تقبل المنافسة مع تنفيذ فوري وتلقائي.</p>
+        <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+            {% if user.is_authenticated %}
+                <a href="{% url 'accounts:dashboard' %}" class="btn btn-warning btn-lg px-4 me-md-2 fw-bold text-dark shadow-sm">لوحة التحكم</a>
+            {% else %}
+                <a href="{% url 'accounts:register' %}" class="btn btn-warning btn-lg px-4 me-md-2 fw-bold text-dark shadow-sm">ابدأ الآن مجاناً</a>
+                <a href="{% url 'accounts:login' %}" class="btn btn-outline-light btn-lg px-4 fw-bold">تسجيل الدخول</a>
+            {% endif %}
+        </div>
+    </div>
+    <div class="col-lg-5 d-none d-lg-block text-center">
+        <!-- أيقونة تعبر عن الانطلاق والسرعة -->
+        <i class="fa-solid fa-rocket fa-10x text-white" style="opacity: 0.9; transform: rotate(45deg);"></i>
+    </div>
+</div>
+
+<!-- Features Section (المميزات) -->
+<div class="row g-4 mb-5 text-center mt-3">
+    <div class="col-md-4">
+        <div class="card h-100 border-0 shadow-sm bg-body-tertiary transition-hover">
+            <div class="card-body p-4">
+                <div class="mb-3">
+                    <i class="fa-solid fa-bolt text-warning fa-3x"></i>
+                </div>
+                <h4 class="fw-bold">تنفيذ فوري</h4>
+                <p class="text-muted">طلباتك تبدأ في التنفيذ تلقائياً فور تأكيد الطلب بدون أي تأخير أو تدخل بشري.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100 border-0 shadow-sm bg-body-tertiary transition-hover">
+            <div class="card-body p-4">
+                <div class="mb-3">
+                    <i class="fa-solid fa-tags text-success fa-3x"></i>
+                </div>
+                <h4 class="fw-bold">أسعار تنافسية</h4>
+                <p class="text-muted">نقدم لك أرخص الأسعار في السوق مع الحفاظ على أعلى معايير الجودة للخدمات.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100 border-0 shadow-sm bg-body-tertiary transition-hover">
+            <div class="card-body p-4">
+                <div class="mb-3">
+                    <i class="fa-solid fa-hand-holding-dollar text-primary fa-3x"></i>
+                </div>
+                <h4 class="fw-bold">اربح معنا</h4>
+                <p class="text-muted">نظام إحالة متطور يضمن لك أرباحاً تلقائية ومستمرة عن كل عميل يسجل ويطلب من خلالك.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- How it Works Section (كيف تعمل المنصة) -->
+<div class="row mb-5 justify-content-center mt-5">
+    <div class="col-12 text-center mb-5">
+        <h2 class="fw-bold border-bottom pb-2 d-inline-block">كيف تبدأ؟</h2>
+        <p class="text-muted mt-2">٣ خطوات بسيطة فقط تفصلك عن النجاح</p>
+    </div>
+    
+    <div class="col-md-3 text-center mb-3">
+        <div class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3 shadow-lg" style="width: 90px; height: 90px; font-size: 2.5rem;">
+            <i class="fa-solid fa-user-plus"></i>
+        </div>
+        <h5 class="fw-bold">1. أنشئ حسابك</h5>
+        <p class="text-muted small">سجل في المنصة في أقل من دقيقة مجاناً.</p>
+    </div>
+    
+    <!-- سهم ربط للكمبيوتر -->
+    <div class="col-md-1 d-none d-md-flex align-items-center justify-content-center">
+        <i class="fa-solid fa-arrow-left fa-2x text-muted opacity-50"></i>
+    </div>
+    
+    <div class="col-md-3 text-center mb-3">
+        <div class="bg-secondary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3 shadow-lg" style="width: 90px; height: 90px; font-size: 2.5rem;">
+            <i class="fa-solid fa-wallet"></i>
+        </div>
+        <h5 class="fw-bold">2. اشحن رصيدك</h5>
+        <p class="text-muted small">أضف الأموال لمحفظتك لبدء الاستخدام.</p>
+    </div>
+    
+    <!-- سهم ربط للكمبيوتر -->
+    <div class="col-md-1 d-none d-md-flex align-items-center justify-content-center">
+        <i class="fa-solid fa-arrow-left fa-2x text-muted opacity-50"></i>
+    </div>
+    
+    <div class="col-md-3 text-center mb-3">
+        <div class="bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3 shadow-lg" style="width: 90px; height: 90px; font-size: 2.5rem;">
+            <i class="fa-solid fa-cart-shopping"></i>
+        </div>
+        <h5 class="fw-bold">3. اطلب الخدمة</h5>
+        <p class="text-muted small">اختر الخدمة المناسبة وراقب نمو حسابك.</p>
+    </div>
+</div>
+{% endblock %}
